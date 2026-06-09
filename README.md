@@ -1,10 +1,18 @@
-# 🏠 Homelab
+# Homelab
 
-Ambiente de aprendizado e experimentação pessoal rodando em um servidor Ubuntu Server (Dell Inspiron 15 — Pentium Gold 7505, 4GB RAM), orquestrado com Docker Compose.
+Ambiente de aprendizado e experimentação pessoal rodando em um servidor Ubuntu Server, orquestrado com Docker Compose.
 
 O objetivo principal é praticar conceitos de infraestrutura, observabilidade e redes aplicados no dia a dia de times de Cloud e DevOps.
 
 ---
+
+## Hardware e Server
+
+- **ISO:** Ubuntu Server 24.04 LTS
+- **Hardware:** Notebook Dell Inspiron 15
+    - **Processador:** Intel Pentium Gold 7505 - Dual-Core com clock 2 GHz a 3.5 GHz
+    - **Memória RAM:** 4 GB DDR4
+    - **Armazenamento:** HD de 512 GB
 
 ## Serviços
 
@@ -141,8 +149,6 @@ docker compose ps
 
 - [ ] Adicionar PostgreSQL + NocoDB para persistência de dados
 - [ ] Configurar Nginx como reverse proxy para os demais serviços
-- [ ] Adicionar stack de logs com Loki + Promtail
-- [ ] Documentar dashboards do Grafana
 
 ---
 
@@ -150,3 +156,5 @@ docker compose ps
 
 **Luan Vieira Teixeira**
 [LinkedIn](https://linkedin.com/in/luanvieirateixeira) · [GitHub](https://github.com/luanvieirateixeira)
+
+**Estruturado por mim, corrigido pela IA**
