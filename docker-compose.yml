@@ -1,0 +1,162 @@
+name: homelab
+
+services:
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:2
+    container_name: uptime-kuma
+    restart: always
+
+    ports:
+      - "3001:3001"
+    
+    volumes:
+      - uptime-kuma:/app/data
+    
+    environment:
+      TZ: America/Sao_Paulo
+      UMASK: "0022"
+
+    networks:
+      - kuma_network
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+
+    # Limite a quantidade de Log gerados pelo container.
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+  
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    restart: always
+
+    ports: 
+      - 8080:80
+
+    volumes:
+      - nginx:/usr/share/nginx/html/
+    
+    networks:
+      - nginx_network
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+
+    # Limite a quantidade de Log gerados pelo container.
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8081:80/tcp"
+
+    env_file:
+      - .env
+
+    environment:
+      TZ: America/Sao_Paulo
+      FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
+
+    volumes:
+      - ./pihole/etc-pihole:/etc/pihole
+      - ./pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+    
+    networks:
+      - pihole_network
+
+    restart: unless-stopped
+  
+  #docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:lts
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+
+    ports:
+      - "8000:8000"
+      - "9443:9443"
+    
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    
+    networks:
+      - portainer_network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring_network
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+    ports:
+      - "9100:9100"
+    networks:
+      - monitoring_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - monitoring_network
+
+volumes:
+  uptime-kuma:
+  nginx:
+  portainer_data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  kuma_network:
+  nginx_network:
+  portainer_network:
+  pihole_network:
+  monitoring_network:
