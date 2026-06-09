@@ -160,4 +160,4 @@ docker compose ps
 
 **Estruturado por mim, corrigido pela IA**
 
-![Descrição](images/Servidor.jpeg)
+![Descrição](images/Terminal.png)
