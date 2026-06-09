@@ -149,6 +149,7 @@ docker compose ps
 
 - [ ] Adicionar PostgreSQL + NocoDB para persistência de dados
 - [ ] Configurar Nginx como reverse proxy para os demais serviços
+- [ ] Integrar alertas via API com Discord
 
 ---
 
