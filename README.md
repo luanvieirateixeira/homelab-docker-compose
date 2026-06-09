@@ -159,3 +159,5 @@ docker compose ps
 [LinkedIn](https://linkedin.com/in/luanvieirateixeira) · [GitHub](https://github.com/luanvieirateixeira)
 
 **Estruturado por mim, corrigido pela IA**
+
+![Descrição](images/Servidor.jpeg)
